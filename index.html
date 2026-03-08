@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Number Guessing Game</title>
+
+  <!-- =====================
+       CSS SECTION
+       ===================== -->
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game-container {
+      background: #ffffff;
+      padding: 25px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .instructions {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #guessBtn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    #resetBtn {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .warning {
+      color: orange;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================
+       HTML SECTION
+       ===================== -->
+  <div class="game-container">
+    <h1>🎯 Number Guessing Game</h1>
+
+    <p class="instructions">
+      Guess a number between <strong>1 and 100</strong>.
+      You will be told whether your guess is too high or too low.
+    </p>
+
+    <input
+      type="number"
+      id="guessInput"
+      placeholder="Enter your guess"
+      min="1"
+      max="100"
+    >
+
+    <div class="buttons">
+      <button id="guessBtn">Guess</button>
+      <button id="resetBtn">Restart</button>
+    </div>
+
+    <p id="message"></p>
+    <p id="attempts">Attempts: 0</p>
+  </div>
+
+  <!-- =====================
+       JAVASCRIPT SECTION
+       ===================== -->
+  <script>
+    let targetNumber;
+    let attempts;
+
+    const guessInput = document.getElementById("guessInput");
+    const message = document.getElementById("message");
+    const attemptsDisplay = document.getElementById("attempts");
+    const guessBtn = document.getElementById("guessBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    // Initialize Game
+    function initGame() {
+      targetNumber = Math.floor(Math.random() * 100) + 1;
+      attempts = 0;
+      attemptsDisplay.textContent = "Attempts: 0";
+      message.textContent = "";
+      message.className = "";
+      guessInput.value = "";
+      guessInput.disabled = false;
+    }
+
+    initGame();
+
+    // Handle Guess
+    function handleGuess() {
+      const guess = Number(guessInput.value);
+
+      if (guessInput.value === "") {
+        message.textContent = "Please enter a number.";
+        message.className = "warning";
+        return;
+      }
+
+      if (guess < 1 || guess > 100) {
+        message.textContent = "Number must be between 1 and 100.";
+        message.className = "warning";
+        return;
+      }
+
+      attempts++;
+      attemptsDisplay.textContent = "Attempts: " + attempts;
+
+      if (guess > targetNumber) {
+        message.textContent = "Too High!";
+        message.className = "error";
+      } else if (guess < targetNumber) {
+        message.textContent = "Too Low!";
+        message.className = "error";
+      } else {
+        message.textContent =
+          "🎉 Correct! You guessed the number in " + attempts + " attempts.";
+        message.className = "success";
+        guessInput.disabled = true;
+      }
+
+      guessInput.value = "";
+    }
+
+    // Event Listeners
+    guessBtn.addEventListener("click", handleGuess);
+
+    guessInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        handleGuess();
+      }
+    });
+
+    resetBtn.addEventListener("click", initGame);
+  </script>
+
+</body>
+</html>
